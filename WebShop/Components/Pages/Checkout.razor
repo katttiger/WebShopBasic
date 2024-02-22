@@ -1,0 +1,66 @@
+﻿@page "/checkout"
+@using WebShop.Common;
+
+@rendermode InteractiveServer
+@inject WebShopHandler wsh
+@inject NavigationManager navigationManager
+
+<PageTitle>Checkout</PageTitle>
+<WebshopHeader ShoppingListLength="@wsh._db.ShoppingList.Count"></WebshopHeader>
+<div>
+    <nav stype="--bs-breadcrumb-divider:'>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" <a href="#">Home</a></li>
+        </ol>
+    </nav>
+</div>
+
+@foreach (var item in wsh._db.ShoppingList)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price/item</th>
+                <th>Price</th>
+                <th>Price*quantity</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>@item.Id</td>
+                <td><img src="@item.Url" width="180px" /></td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Price * item.Quantity)</td>
+
+            </tr>
+        </tbody>
+    </table>
+}
+
+<form class="form-control">
+    @*TODO: If user exist, print adress and name automatically*@
+    <input type="text" placeholder="Name" @bind="wsh.Customer.Username" required />
+    <input type="text" placeholder="Adress" @bind="wsh.Customer.Password" required />
+    <input type="checkbox" @onclick="()=>wsh.AddCustomer(wsh.Customer.Username, wsh.Customer.Password)" @onchange="()=>wsh.AddCustomerShopping(wsh.Customer)" required /> Agree to terms and privacy policy
+
+</form>
+<input type="submit" @onclick="NavigateToConfirmation" value="Submit" />
+
+@code {
+    public bool purchaseComplete = false;
+    public bool submited = false;
+
+    public void NavigateToConfirmation()
+    {
+
+        navigationManager.NavigateTo("/confirmation");
+    }
+}

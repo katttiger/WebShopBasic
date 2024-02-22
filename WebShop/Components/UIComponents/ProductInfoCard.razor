@@ -1,0 +1,57 @@
+﻿@*ProductInfoCard*@
+
+@using WebShop.Common.Classes
+
+@if(Product.Quantity>0){
+
+@*Improvement: Center the card on the side*@
+<div class="card d-flex" style="max-width:540px; max-height:auto;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="@Product.Url" class="img-fluid rounded-start" alt="@Product.Name, @Product.Description">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Product.Name</h5>
+                <p class="card-text"><small class="text-body-secondary">@Product.Price [Unit]</small></p>
+                <p class="card-text">@Product.Description</p>
+                <AddToCartButton OnAddToCart="AddToCart"></AddToCartButton>
+            </div>
+        </div>
+    </div>
+    </div>
+}
+else
+{
+
+    @*Improvement: Center the card on the side*@
+    <div class="card d-flex opacity-50" style="max-width:540px; max-height:auto;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@Product.Url" class="img-fluid rounded-start" alt="@Product.Name, @Product.Description">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@Product.Name</h5>
+                    <p class="card-text"><small class="text-body-secondary">@Product.Price [Unit]</small></p>
+                    <p class="card-text">Sold out</p>
+                    <AddToCartButton></AddToCartButton>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public Product Product { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnAddToCart { get; set; }
+
+    public async Task AddToCart()
+    {
+        await OnAddToCart.InvokeAsync();
+    }
+}
